@@ -37,8 +37,9 @@ Aplikasi dibangun dengan antarmuka modern berkonsep **Light Blue Glassmorphism**
    * Berjalan tanpa *backend* database yang rumit, menjaga prototipe tetap ringan, cepat, dan aman sesuai batasan seleksi.
 
 ---
-
-## 🚀 4. Cara Menjalankan Aplikasi
+## 🤖 4. Catatan & Penggunaan Tools
+* Proyek ini dikembangkan secara mandiri dengan bantuan **Gemini AI** sebagai *AI assistant* untuk membantu penulisan struktur kode JavaScript, perbaikan logika *localStorage*, serta penyusunan konsep gamifikasi.
+## 🚀 5. Cara Menjalankan Aplikasi
 Aplikasi ini bersifat *standalone web app* (HTML5, CSS3, JavaScript Vanilla) sehingga tidak memerlukan instalasi *dependency* Node.js maupun PHP.
 
 1. **Clone Repositori ini:**
