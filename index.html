@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perpustakaan Poin - Modern Light Blue Glassmorphism</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- External CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- BACKGROUND GLOW ORBS -->
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <!-- SECTION: LOGIN -->
+    <div id="login-section" class="login-bg">
+        <div class="glass-card login-card">
+            <div class="login-header">
+                <div class="brand-icon"><i class="fa-solid fa-book-bookmark"></i></div>
+                <h2 class="brand-title">Perpustakaan Poin</h2>
+                <p class="brand-subtitle">Sistem Presensi & Gamifikasi Literasi</p>
+            </div>
+
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Username Kampus / NIM</label>
+                    <input type="text" id="login-username" class="input-field" placeholder="Masukkan NIM atau ID Admin" required>
+                </div>
+                <div class="form-group-lg">
+                    <label class="form-label">Password</label>
+                    <input type="password" id="login-password" class="input-field" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-full-padding">Masuk Ke Sistem</button>
+            </form>
+
+            <div class="demo-login-container">
+                <p class="demo-title">Akses Instan Mode Demo:</p>
+                <div class="flex gap-2 justify-center">
+                    <button onclick="quickLogin('admin')" class="btn btn-secondary btn-sm"><i class="fa-solid fa-user-shield"></i> [Demo Admin]</button>
+                    <button onclick="quickLogin('2022101234')" class="btn btn-secondary btn-sm"><i class="fa-solid fa-user-graduate"></i> [Demo Mahasiswa]</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SECTION: MAIN APP DASHBOARD -->
+    <div id="app-section" class="app-container hidden">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-logo-icon"><i class="fa-solid fa-book-open-reader"></i></div>
+                <div>
+                    <h3 class="sidebar-title">Perpus Poin</h3>
+                    <p class="sidebar-badge" id="sidebar-role-badge">Role: -</p>
+                </div>
+            </div>
+
+            <div class="sidebar-menu">
+                <!-- Admin Menu -->
+                <div id="admin-menu" class="flex flex-col gap-2">
+                    <a class="menu-item active" onclick="switchTab('admin-dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard & Grafik</a>
+                    <a class="menu-item" onclick="switchTab('admin-beri-poin')"><i class="fa-solid fa-coins"></i> Beri Poin & Presensi</a>
+                    <a class="menu-item" onclick="switchTab('admin-rewards')"><i class="fa-solid fa-shop"></i> Kelola Atribut Profil</a>
+                    <a class="menu-item" onclick="switchTab('admin-pustakawan')"><i class="fa-solid fa-users-gear"></i> Kelola Pustakawan</a>
+                </div>
+
+                <!-- Student Menu -->
+                <div id="student-menu" class="flex flex-col gap-2 hidden">
+                    <a class="menu-item active" onclick="switchTab('student-dashboard')"><i class="fa-solid fa-id-card"></i> Profil Saya</a>
+                    <a class="menu-item" onclick="switchTab('student-katalog')"><i class="fa-solid fa-store"></i> Katalog Hadiah</a>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <button onclick="handleLogout()" class="btn btn-danger btn-full"><i class="fa-solid fa-right-from-bracket"></i> Keluar</button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace -->
+        <main class="main-content">
+            <header class="top-header">
+                <div>
+                    <h1 id="page-title" class="page-title-text">Dashboard</h1>
+                    <p id="page-subtitle" class="page-subtitle-text">Sistem informasi manajemen perpustakaan modern.</p>
+                </div>
+                <div class="flex items-center gap-4">
+                    <div class="glass-pill">
+    <i class="fa-solid fa-calendar-days" style="color: var(--accent-blue);"></i>
+    <input type="date" id="app-date-picker" class="date-picker-input" onchange="handleDateChange(this.value)">
+</div>
+                    <div class="text-right">
+                        <h4 id="user-display-name" class="font-bold">Nama User</h4>
+                        <p id="user-display-id" class="user-id-text">NIM/ID</p>
+                    </div>
+                </div>
+            </header>
+
+            <!-- TAB 1: ADMIN DASHBOARD -->
+            <div id="tab-admin-dashboard" class="tab-page">
+                <!-- KPI Grid -->
+                <div class="grid grid-3 gap-4 mb-25">
+                    <div class="glass-card flex items-center gap-4">
+                        <div class="kpi-icon kpi-blue"><i class="fa-solid fa-users"></i></div>
+                        <div>
+                            <p class="kpi-label">Total Anggota</p>
+                            <h2 id="kpi-members" class="kpi-value">0</h2>
+                        </div>
+                    </div>
+                    <div class="glass-card flex items-center gap-4">
+                        <div class="kpi-icon kpi-cyan"><i class="fa-solid fa-calendar-check"></i></div>
+                        <div>
+                            <p class="kpi-label">Kunjungan Bulan Ini</p>
+                            <h2 id="kpi-visits" class="kpi-value">0</h2>
+                        </div>
+                    </div>
+                    <div class="glass-card flex items-center gap-4">
+                        <div class="kpi-icon kpi-indigo"><i class="fa-solid fa-book"></i></div>
+                        <div>
+                            <p class="kpi-label">Peminjaman Buku</p>
+                            <h2 id="kpi-borrows" class="kpi-value">0</h2>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Container (Grafik Otomatis) -->
+                <div class="glass-card mb-25">
+                    <div class="flex justify-between items-center mb-15">
+                        <h3 class="card-section-title"><i class="fa-solid fa-chart-area"></i> Grafik Tren Kunjungan & Peminjaman Buku</h3>
+                        <span class="badge badge-primary">Update Real-Time</span>
+                    </div>
+                    <div style="position: relative; height: 320px; width: 100%;">
+                        <canvas id="libraryTrendChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- History Table -->
+                <div class="glass-card">
+                    <h3 class="card-section-title">Riwayat Aktivitas & Presensi Terakhir</h3>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Penerima (NIM)</th>
+                                    <th>Aktivitas</th>
+                                    <th>Poin</th>
+                                    <th>Pemberi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="table-history"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: ADMIN BERI POIN -->
+            <div id="tab-admin-beri-poin" class="tab-page hidden">
+                <div class="glass-card form-container-centered">
+                    <h3 class="card-section-title mb-20"><i class="fa-solid fa-circle-plus"></i> Form Input Kunjungan / Peminjaman Buku</h3>
+                    <form onsubmit="handleGivePoints(event)">
+                        <div class="form-group">
+                            <label class="form-label">Cari Username / NIM Mahasiswa</label>
+                            <input type="text" id="search-member-id" class="input-field" placeholder="Ketik NIM contoh: 2022101234" onkeyup="searchMemberPreview()" required>
+                            <div id="member-search-preview" class="search-preview-box"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Jenis Aktivitas</label>
+                            <select id="point-activity" class="input-field">
+                                <option value="Kunjungan Perpustakaan">Kunjungan Perpustakaan (+1 Poin)</option>
+                                <option value="Peminjaman Buku">Peminjaman Buku (+1 Poin)</option>
+                                <option value="Pengembalian Tepat Waktu">Pengembalian Tepat Waktu (+1 Poin)</option>
+                                <option value="Acara Literasi">Mengikuti Acara Literasi (+2 Poin)</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Jumlah Poin</label>
+                            <input type="number" id="point-amount" class="input-field" value="1" min="1" required>
+                        </div>
+
+                        <div class="form-group-lg">
+                            <label class="form-label">Catatan (Opsional)</label>
+                            <input type="text" id="point-note" class="input-field" placeholder="Contoh: Meminjam buku Algoritma C++">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-full-padding"><i class="fa-solid fa-paper-plane"></i> Simpan & Update Grafik</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 3: ADMIN KELOLA BORDER / BANNER -->
+            <div id="tab-admin-rewards" class="tab-page hidden">
+                <div class="flex justify-between items-center mb-20">
+                    <h3>Daftar Border & Banner Profil</h3>
+                    <button onclick="openAddRewardModal()" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah Hadiah Baru</button>
+                </div>
+
+                <div class="filter-bar mb-20">
+                    <button class="filter-btn active" onclick="setRewardFilter('all', 'admin')"><i class="fa-solid fa-list"></i> Semua</button>
+                    <button class="filter-btn" onclick="setRewardFilter('border', 'admin')"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
+                    <button class="filter-btn" onclick="setRewardFilter('banner', 'admin')"><i class="fa-solid fa-image"></i> Banner Saja</button>
+                </div>
+
+                <div id="admin-rewards-grid" class="grid grid-3 gap-4"></div>
+            </div>
+
+            <!-- TAB 4: ADMIN KELOLA PUSTAKAWAN -->
+            <div id="tab-admin-pustakawan" class="tab-page hidden">
+                <div class="glass-card form-container-sm">
+                    <h3 class="card-section-title mb-20"><i class="fa-solid fa-user-plus"></i> Tambah Pustakawan Baru</h3>
+                    <form onsubmit="handleAddLibrarian(event)">
+                        <div class="form-group">
+                            <label class="form-label">Nama Lengkap Pustakawan</label>
+                            <input type="text" id="new-lib-name" class="input-field" placeholder="Nama Pustakawan" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Username Akses</label>
+                            <input type="text" id="new-lib-username" class="input-field" placeholder="username_pustakawan" required>
+                        </div>
+                        <div class="form-group-lg">
+                            <label class="form-label">Password</label>
+                            <input type="password" id="new-lib-password" class="input-field" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-full"><i class="fa-solid fa-save"></i> Daftarkan Pustakawan</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TAB 5: STUDENT DASHBOARD -->
+            <div id="tab-student-dashboard" class="tab-page hidden">
+                <div id="student-profile-banner" class="profile-banner-card">
+                    <div class="banner-overlay"></div>
+                    <div class="banner-content flex items-center gap-6">
+                        <div class="avatar-container">
+                            <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80" class="avatar-img" alt="Avatar">
+                            <div id="student-border-frame" class="border-overlay"></div>
+                        </div>
+                        <div>
+                            <h2 id="student-name-display" class="student-name-text">Nama Mahasiswa</h2>
+                            <p id="student-nim-display" class="student-nim-text">2022101234 • Teknik Informatika</p>
+                            <div class="mt-10 flex gap-2">
+                                <span class="badge badge-success"><i class="fa-solid fa-coins"></i> Total Poin: <span id="student-points-badge">0</span></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card">
+                    <h3 class="card-section-title">Riwayat Poin & Aktivitas Saya</h3>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Aktivitas</th>
+                                    <th>Poin</th>
+                                    <th>Pustakawan Pemberi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-history-table"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 6: STUDENT KATALOG HADIAH -->
+            <div id="tab-student-katalog" class="tab-page hidden">
+                <div class="mb-20">
+                    <h3>Katalog Hadiah Atribut Profil</h3>
+                    <p class="subtitle-muted">Tukarkan poin literasimu dengan border unik dan banner eksklusif!</p>
+                </div>
+
+                <div class="filter-bar mb-20">
+                    <button class="filter-btn active" onclick="setRewardFilter('all', 'student')"><i class="fa-solid fa-list"></i> Semua</button>
+                    <button class="filter-btn" onclick="setRewardFilter('border', 'student')"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
+                    <button class="filter-btn" onclick="setRewardFilter('banner', 'student')"><i class="fa-solid fa-image"></i> Banner Saja</button>
+                </div>
+
+                <div id="student-catalog-grid" class="grid grid-3 gap-4"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MODAL ADD REWARD -->
+    <div id="reward-modal" class="modal-backdrop hidden">
+        <div class="modal-box" style="max-width: 580px;">
+            <h3 class="card-section-title mb-15"><i class="fa-solid fa-circle-plus"></i> Tambah Border / Banner Baru</h3>
+            
+            <div style="margin-bottom: 20px; overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; background: rgba(2, 132, 199, 0.08); border-radius: 8px; overflow: hidden;">
+                    <thead>
+                        <tr style="background: rgba(2, 132, 199, 0.2); color: #0369a1; text-align: left;">
+                            <th style="padding: 10px;">Jenis Atribut</th>
+                            <th style="padding: 10px;">Rasio & Dimensi</th>
+                            <th style="padding: 10px;">Format Rekomendasi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom: 1px solid rgba(0,0,0,0.05);">
+                            <td style="padding: 10px; font-weight: 600;">Border Avatar</td>
+                            <td style="padding: 10px;">Rasio 1:1 (Min. 200x200 px)</td>
+                            <td style="padding: 10px; color: var(--text-muted);">PNG Transparan</td>
+                        </tr>
+                        <tr>
+                            <td style="padding: 10px; font-weight: 600;">Banner Header</td>
+                            <td style="padding: 10px;">Rasio 3:1 / 16:9 (Min. 600x200 px)</td>
+                            <td style="padding: 10px; color: var(--text-muted);">PNG / JPG / WebP</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <form onsubmit="handleSaveReward(event)">
+                <div class="form-group-sm">
+                    <label class="form-label-sm">Nama Atribut</label>
+                    <input type="text" id="reward-name" class="input-field" placeholder="Contoh: Border Gold Cyber" required>
+                </div>
+                <div class="form-group-sm">
+                    <label class="form-label-sm">Jenis</label>
+                    <select id="reward-type" class="input-field">
+                        <option value="border">Border Profil (Avatar Frame)</option>
+                        <option value="banner">Banner Header Profil</option>
+                    </select>
+                </div>
+                <div class="form-group-sm">
+                    <label class="form-label-sm">Harga (Poin Required)</label>
+                    <input type="number" id="reward-points" class="input-field" value="10" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label-sm">Upload File Gambar / URL</label>
+                    <input type="file" id="reward-file" class="input-field mb-8" accept="image/*" onchange="previewUploadedImage(this)">
+                    <input type="text" id="reward-image-url" class="input-field" placeholder="Atau paste URL gambar di sini...">
+                </div>
+                <div id="reward-preview-container" class="preview-container hidden">
+                    <p class="preview-text">Pratinjau Gambar:</p>
+                    <img id="reward-preview-img" src="" class="preview-img" alt="Preview">
+                </div>
+                <div class="flex gap-2">
+                    <button type="button" onclick="closeAddRewardModal()" class="btn btn-secondary flex-1">Batal</button>
+                    <button type="submit" class="btn btn-primary flex-1">Simpan Hadiah</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOM NOTIFIKASI -->
+    <div id="custom-alert-modal" class="modal-backdrop hidden">
+        <div class="modal-box text-center" style="max-width: 380px;">
+            <div style="font-size: 2.3rem; color: var(--accent-blue); margin-bottom: 12px;"><i class="fa-solid fa-circle-check"></i></div>
+            <h3 class="card-section-title" style="margin-bottom: 8px;">Informasi</h3>
+            <p id="alert-message" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 20px;">Pesan informasi sistem.</p>
+            <button type="button" onclick="closeAlertModal()" class="btn btn-primary btn-full">OK</button>
+        </div>
+    </div>
+
+    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
+    <div id="custom-confirm-modal" class="modal-backdrop hidden">
+        <div class="modal-box text-center" style="max-width: 400px;">
+            <div style="font-size: 2.5rem; color: var(--danger); margin-bottom: 15px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 class="card-section-title" style="margin-bottom: 10px;">Konfirmasi Hapus</h3>
+            <p id="confirm-message" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Apakah Anda yakin ingin menghapus atribut ini?</p>
+            <div class="flex gap-2">
+                <button type="button" id="confirm-btn-cancel" class="btn btn-secondary flex-1">Batal</button>
+                <button type="button" id="confirm-btn-ok" class="btn btn-danger flex-1">Hapus</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- External JavaScript -->
+<!-- External JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>
