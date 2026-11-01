@@ -96,7 +96,7 @@ Aplikasi ini adalah *standalone web app* berbasis HTML5, CSS3, dan JavaScript Va
 
 1. Clone repositori:
    ```bash
-   git clone https://github.com/aksara26/pointperpus.git
+   git clone https://github.com/aksara26/Pointperpus.git
    cd pointperpus
    ```
 2. Buka file `index.html` dengan klik dua kali, atau klik kanan → *Open with* → browser.
