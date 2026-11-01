@@ -65,16 +65,16 @@
             <div class="sidebar-menu">
                 <!-- Admin Menu -->
                 <div id="admin-menu" class="flex flex-col gap-2">
-                    <a class="menu-item active" onclick="switchTab('admin-dashboard')"><i class="fa-solid fa-chart-line"></i> Dashboard & Grafik</a>
-                    <a class="menu-item" onclick="switchTab('admin-beri-poin')"><i class="fa-solid fa-coins"></i> Beri Poin & Presensi</a>
-                    <a class="menu-item" onclick="switchTab('admin-rewards')"><i class="fa-solid fa-shop"></i> Kelola Atribut Profil</a>
-                    <a class="menu-item" onclick="switchTab('admin-pustakawan')"><i class="fa-solid fa-users-gear"></i> Kelola Pustakawan</a>
+                    <a class="menu-item active" data-tab="admin-dashboard" onclick="switchTab('admin-dashboard', this)"><i class="fa-solid fa-chart-line"></i> Dashboard & Grafik</a>
+                    <a class="menu-item" data-tab="admin-beri-poin" onclick="switchTab('admin-beri-poin', this)"><i class="fa-solid fa-coins"></i> Beri Poin & Presensi</a>
+                    <a class="menu-item" data-tab="admin-rewards" onclick="switchTab('admin-rewards', this)"><i class="fa-solid fa-shop"></i> Kelola Atribut Profil</a>
+                    <a class="menu-item" data-tab="admin-pustakawan" onclick="switchTab('admin-pustakawan', this)"><i class="fa-solid fa-users-gear"></i> Kelola Pustakawan</a>
                 </div>
 
                 <!-- Student Menu -->
                 <div id="student-menu" class="flex flex-col gap-2 hidden">
-                    <a class="menu-item active" onclick="switchTab('student-dashboard')"><i class="fa-solid fa-id-card"></i> Profil Saya</a>
-                    <a class="menu-item" onclick="switchTab('student-katalog')"><i class="fa-solid fa-store"></i> Katalog Hadiah</a>
+                    <a class="menu-item active" data-tab="student-dashboard" onclick="switchTab('student-dashboard', this)"><i class="fa-solid fa-id-card"></i> Profil Saya</a>
+                    <a class="menu-item" data-tab="student-katalog" onclick="switchTab('student-katalog', this)"><i class="fa-solid fa-store"></i> Katalog Hadiah</a>
                 </div>
             </div>
 
@@ -199,17 +199,45 @@
             <!-- TAB 3: ADMIN KELOLA BORDER / BANNER -->
             <div id="tab-admin-rewards" class="tab-page hidden">
                 <div class="flex justify-between items-center mb-20">
-                    <h3>Daftar Border & Banner Profil</h3>
+                    <div>
+                        <h3>Daftar Border & Banner Profil</h3>
+                        <p class="subtitle-muted">Tambah, edit, aktif/nonaktifkan, dan pantau penukaran reward.</p>
+                    </div>
                     <button onclick="openAddRewardModal()" class="btn btn-primary"><i class="fa-solid fa-plus"></i> Tambah Hadiah Baru</button>
                 </div>
 
                 <div class="filter-bar mb-20">
-                    <button class="filter-btn active" onclick="setRewardFilter('all', 'admin')"><i class="fa-solid fa-list"></i> Semua</button>
-                    <button class="filter-btn" onclick="setRewardFilter('border', 'admin')"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
-                    <button class="filter-btn" onclick="setRewardFilter('banner', 'admin')"><i class="fa-solid fa-image"></i> Banner Saja</button>
+                    <button class="filter-btn active" onclick="setRewardFilter('all', 'admin', this)"><i class="fa-solid fa-list"></i> Semua</button>
+                    <button class="filter-btn" onclick="setRewardFilter('border', 'admin', this)"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
+                    <button class="filter-btn" onclick="setRewardFilter('banner', 'admin', this)"><i class="fa-solid fa-image"></i> Banner Saja</button>
                 </div>
 
                 <div id="admin-rewards-grid" class="grid grid-3 gap-4"></div>
+
+                <div class="glass-card mt-20">
+                    <div class="flex justify-between items-center mb-15">
+                        <h3 class="card-section-title"><i class="fa-solid fa-receipt"></i> Riwayat Penukaran Reward</h3>
+                        <div class="flex gap-2 items-center">
+                            <span class="badge badge-primary" id="admin-redemption-count">0 Transaksi</span>
+                            <span class="badge badge-danger" id="admin-redemption-total">0 Poin</span>
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Mahasiswa</th>
+                                    <th>Reward</th>
+                                    <th>Tipe</th>
+                                    <th>Poin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-redemption-table"></tbody>
+                        </table>
+                    </div>
+                    <p class="table-note">Menampilkan maksimal 10 penukaran terbaru.</p>
+                </div>
             </div>
 
             <!-- TAB 4: ADMIN KELOLA PUSTAKAWAN -->
@@ -269,6 +297,26 @@
                         </table>
                     </div>
                 </div>
+
+                <div class="glass-card mt-20">
+                    <div class="flex justify-between items-center mb-15">
+                        <h3 class="card-section-title"><i class="fa-solid fa-gift"></i> Riwayat Penukaran Reward</h3>
+                        <span class="badge badge-danger" id="student-redemption-total">0 Poin</span>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Waktu</th>
+                                    <th>Reward</th>
+                                    <th>Tipe</th>
+                                    <th>Poin</th>
+                                </tr>
+                            </thead>
+                            <tbody id="student-redemption-table"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
 
             <!-- TAB 6: STUDENT KATALOG HADIAH -->
@@ -279,9 +327,10 @@
                 </div>
 
                 <div class="filter-bar mb-20">
-                    <button class="filter-btn active" onclick="setRewardFilter('all', 'student')"><i class="fa-solid fa-list"></i> Semua</button>
-                    <button class="filter-btn" onclick="setRewardFilter('border', 'student')"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
-                    <button class="filter-btn" onclick="setRewardFilter('banner', 'student')"><i class="fa-solid fa-image"></i> Banner Saja</button>
+                    <button class="filter-btn active" onclick="setRewardFilter('all', 'student', this)"><i class="fa-solid fa-list"></i> Semua</button>
+                    <button class="filter-btn" onclick="setRewardFilter('border', 'student', this)"><i class="fa-solid fa-circle-notch"></i> Border Saja</button>
+                    <button class="filter-btn" onclick="setRewardFilter('banner', 'student', this)"><i class="fa-solid fa-image"></i> Banner Saja</button>
+                    <button class="filter-btn" onclick="setRewardFilter('owned', 'student', this)"><i class="fa-solid fa-box-open"></i> Koleksi Saya</button>
                 </div>
 
                 <div id="student-catalog-grid" class="grid grid-3 gap-4"></div>
@@ -289,10 +338,10 @@
         </main>
     </div>
 
-    <!-- MODAL ADD REWARD -->
+    <!-- MODAL ADD / EDIT REWARD -->
     <div id="reward-modal" class="modal-backdrop hidden">
         <div class="modal-box" style="max-width: 580px;">
-            <h3 class="card-section-title mb-15"><i class="fa-solid fa-circle-plus"></i> Tambah Border / Banner Baru</h3>
+            <h3 id="reward-modal-title" class="card-section-title mb-15"><i class="fa-solid fa-circle-plus"></i> Tambah Border / Banner Baru</h3>
             
             <div style="margin-bottom: 20px; overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; font-size: 0.82rem; background: rgba(2, 132, 199, 0.08); border-radius: 8px; overflow: hidden;">
@@ -318,26 +367,35 @@
                 </table>
             </div>
 
-            <form onsubmit="handleSaveReward(event)">
+            <form id="reward-form" onsubmit="handleSaveReward(event)">
                 <div class="form-group-sm">
-                    <label class="form-label-sm">Nama Atribut</label>
+                    <label class="form-label-sm" for="reward-name">Nama Atribut</label>
                     <input type="text" id="reward-name" class="input-field" placeholder="Contoh: Border Gold Cyber" required>
                 </div>
                 <div class="form-group-sm">
-                    <label class="form-label-sm">Jenis</label>
+                    <label class="form-label-sm" for="reward-description">Deskripsi (Opsional)</label>
+                    <input type="text" id="reward-description" class="input-field" placeholder="Contoh: Border eksklusif untuk pembaca aktif">
+                </div>
+                <div class="form-group-sm">
+                    <label class="form-label-sm" for="reward-type">Jenis</label>
                     <select id="reward-type" class="input-field">
                         <option value="border">Border Profil (Avatar Frame)</option>
                         <option value="banner">Banner Header Profil</option>
                     </select>
                 </div>
                 <div class="form-group-sm">
-                    <label class="form-label-sm">Harga (Poin Required)</label>
+                    <label class="form-label-sm" for="reward-points">Harga (Poin Required)</label>
                     <input type="number" id="reward-points" class="input-field" value="10" min="1" required>
                 </div>
                 <div class="form-group">
-                    <label class="form-label-sm">Upload File Gambar / URL</label>
-                    <input type="file" id="reward-file" class="input-field mb-8" accept="image/*" onchange="previewUploadedImage(this)">
-                    <input type="text" id="reward-image-url" class="input-field" placeholder="Atau paste URL gambar di sini...">
+                    <label class="form-label-sm" for="reward-file">Upload File Gambar / URL</label>
+                    <input type="file" id="reward-file" class="input-field mb-8" accept="image/png,image/jpeg,image/webp" onchange="previewUploadedImage(this)">
+                    <input type="text" id="reward-image-url" class="input-field" placeholder="Atau paste URL gambar di sini..." oninput="handleRewardUrlInput(this.value)">
+                    <p class="help-text">Maksimal 3MB. Gambar otomatis dikompres: border maks. 512px, banner maks. 1200px.</p>
+                </div>
+                <div class="form-group-sm checkbox-row">
+                    <input type="checkbox" id="reward-active" checked>
+                    <label for="reward-active">Tampilkan reward di katalog mahasiswa</label>
                 </div>
                 <div id="reward-preview-container" class="preview-container hidden">
                     <p class="preview-text">Pratinjau Gambar:</p>
@@ -345,7 +403,7 @@
                 </div>
                 <div class="flex gap-2">
                     <button type="button" onclick="closeAddRewardModal()" class="btn btn-secondary flex-1">Batal</button>
-                    <button type="submit" class="btn btn-primary flex-1">Simpan Hadiah</button>
+                    <button type="submit" id="reward-save-btn" class="btn btn-primary flex-1"><i class="fa-solid fa-floppy-disk"></i> Simpan Hadiah</button>
                 </div>
             </form>
         </div>
@@ -361,21 +419,20 @@
         </div>
     </div>
 
-    <!-- MODAL CUSTOM KONFIRMASI HAPUS -->
+    <!-- MODAL CUSTOM KONFIRMASI -->
     <div id="custom-confirm-modal" class="modal-backdrop hidden">
         <div class="modal-box text-center" style="max-width: 400px;">
-            <div style="font-size: 2.5rem; color: var(--danger); margin-bottom: 15px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
-            <h3 class="card-section-title" style="margin-bottom: 10px;">Konfirmasi Hapus</h3>
-            <p id="confirm-message" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Apakah Anda yakin ingin menghapus atribut ini?</p>
+            <div id="confirm-icon" style="font-size: 2.5rem; color: var(--danger); margin-bottom: 15px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 id="confirm-title" class="card-section-title" style="margin-bottom: 10px;">Konfirmasi</h3>
+            <p id="confirm-message" style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 25px;">Apakah Anda yakin?</p>
             <div class="flex gap-2">
                 <button type="button" id="confirm-btn-cancel" class="btn btn-secondary flex-1">Batal</button>
-                <button type="button" id="confirm-btn-ok" class="btn btn-danger flex-1">Hapus</button>
+                <button type="button" id="confirm-btn-ok" class="btn btn-primary flex-1">Ya</button>
             </div>
         </div>
     </div>
 
     <!-- External JavaScript -->
-<!-- External JavaScript -->
     <script src="js/script.js"></script>
 </body>
 </html>
