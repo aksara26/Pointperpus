@@ -1,0 +1,11 @@
+[Desktop Entry]
+Version=1.0
+Type=Application
+Name=Perpustakaan Poin
+Comment=Buka Perpustakaan Poin dalam mode aplikasi Chromium
+Exec=/home/kurakura/Developer/proyek/Perpus/start.sh
+Path=/home/kurakura/Developer/proyek/Perpus
+Icon=/home/kurakura/Developer/proyek/Perpus/favicon.ico
+Terminal=false
+Categories=Education;Office;
+StartupWMClass=perpustakaan-poin
